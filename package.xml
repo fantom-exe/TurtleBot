@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>sample_pubsub</name>
+  <name>turtlebot</name>
   <version>0.0.0</version>
   <description>The sample_pubsub package</description>
 

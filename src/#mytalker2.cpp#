@@ -1,0 +1,64 @@
+#include "ros/ros.h"
+//#include "std_msgs/String.h"
+//#include "std_msgs/Float64.h"
+#include <sample_pubsub/mymsg.h>
+#include <sstream>
+
+/**
+ * This tutorial demonstrates simple sending of messages over the ROS system.
+ */
+int main(int argc, char **argv)
+{
+  double x = 0;
+  double y = 0;
+  ros::init(argc, argv, "talker2");
+  ros::NodeHandle n;
+
+
+  ros::Publisher chatter1_pub = n.advertise<sample_pubsub::mymsg>("my_msg", 1000);
+
+  ros::Rate loop_rate(1);
+
+
+  int count = 0;
+  while (ros::ok())
+  {
+    
+    sample_pubsub::mymsg msg;
+    //    std::stringstream ss;
+    x = 0;
+    y = 0;
+    std::cout << "Enter your coordinates." << std::endl;
+    std::cout << "X:";
+    std::cin >> x;
+    msg.x=x;
+
+    std::cout << "Y:";
+    std::cin >> y;
+    msg.y=y;
+    //std::cout << "Coordinates received." << std::endl;
+    // ROS_INFO("%s", msg.data.c_str());
+
+    /*    
+    do {
+      // inputs
+    } while( (x < 0 || x > 9) || (y < 0 || y > 9) );
+    */
+    
+    if( abs(x) <= 9 && abs(y) <= 9){
+      chatter1_pub.publish(msg);
+      std::cout << "Coordinates sent." << std::endl;
+      }
+      else{
+	std::cout << "Error! Your coordinates must both be within a range of -9 and 9 (inclusive)." << std::endl;
+	std::cout << "Coordinates not sent." << std::endl;
+      }
+
+    
+    ros::spinOnce();
+    loop_rate.sleep();
+  }
+
+
+  return 0;
+}

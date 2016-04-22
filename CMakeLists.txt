@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(sample_pubsub)
+project(turtlebot)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -193,25 +193,13 @@ include_directories(
 ####################################
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-# mytalker / mylistener
-add_executable(mytalker src/mytalker.cpp)
-target_link_libraries(mytalker ${catkin_LIBRARIES})
-add_executable(mylistener src/mylistener.cpp)
-target_link_libraries(mylistener ${catkin_LIBRARIES})
-
-# fizz / buzz
-add_executable(fizz src/fizz.cpp)
-target_link_libraries(fizz ${catkin_LIBRARIES})
-add_executable(buzz src/buzz.cpp)
-target_link_libraries(buzz ${catkin_LIBRARIES})
-
-# mytalker2 / mylistener2
+# ui_node/nav_node
 # since these two files have custom messages, a dependency must
 # be specifed for the correct order of compilation
-add_executable(mytalker2 src/mytalker2.cpp)
-target_link_libraries(mytalker2 ${catkin_LIBRARIES})
-add_dependencies(mytalker2 sample_pubsub_generate_messages_cpp)
+add_executable(ui_node src/ui_node.cpp)
+target_link_libraries(ui_node ${catkin_LIBRARIES})
+add_dependencies(ui_node sample_pubsub_generate_messages_cpp)
 
-add_executable(mylistener2 src/mylistener2.cpp)
-target_link_libraries(mylistener2 ${catkin_LIBRARIES})
-add_dependencies(mylistener2 sample_pubsub_generate_messages_cpp)
+add_executable(nav_node src/nav_node.cpp src/nav.cpp)
+target_link_libraries(nav_node ${catkin_LIBRARIES})
+add_dependencies(nav_node sample_pubsub_generate_messages_cpp)
