@@ -27,7 +27,7 @@ int main(int argc, char **argv)
   ros::Rate loopRate(1); // 10 hz
 
   //  while(ros::ok())
-  // {
+  //    {
       // turnThenForward go is invoked when we want TurtleBot to turn in direction of destination
       // then go forward
       //robot.turnThenForwardGo();
