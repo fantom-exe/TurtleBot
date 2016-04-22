@@ -8,9 +8,9 @@
 #include <math.h>
 #include <cmath>
 // how much we need in velocity commands to move incrementAmt forward
-const double movementMultiple = 3*.34; 
+const double movementMultiple = 1; 
 // how much we move forward/backward each increment
-const double incrementAmt = .3;
+const double incrementAmt = .1;
 // how much angular velocity we need to move right 90 degrees
 const double left_90 = 1.0;
 // how much angular velocity we need to move right 90 degrees

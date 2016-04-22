@@ -200,6 +200,6 @@ add_executable(ui_node src/ui_node.cpp)
 target_link_libraries(ui_node ${catkin_LIBRARIES})
 add_dependencies(ui_node sample_pubsub_generate_messages_cpp)
 
-add_executable(nav_node src/nav_node.cpp src/nav.cpp)
+add_executable(nav_node src/nav_node.cpp)
 target_link_libraries(nav_node ${catkin_LIBRARIES})
 add_dependencies(nav_node sample_pubsub_generate_messages_cpp)
