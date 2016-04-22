@@ -11,11 +11,8 @@ void mymsg_Callback(const sample_pubsub::mymsg::ConstPtr& msg)
 {
   //ROS_INFO("got packet: [%s]", msg->data.c_str());
   //ROS_INFO("got packet: ");
-  cout << "got: first_name: "<< msg->first_name;
-  cout << "\tlast_name: " << msg->last_name;
-  cout << "\tage: " << (int)msg->age;
-  cout << "\tscore: " << msg->score;
-  cout << "\t[hdr_seq=" << msg->header.seq << "]";
+  cout << "X: "<< msg->x << std::endl;
+  cout << "Y: " << msg->y << std::endl;
   cout << endl;
 }
 
