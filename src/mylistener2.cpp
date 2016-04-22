@@ -67,6 +67,7 @@ class RoboState
     void turnForward();
     void  goForward();
   public:
+    void testForward();
     void turnThenForwardGo();
     RoboState(ros::NodeHandle rosNode);
     void goRobotGo();
@@ -74,7 +75,30 @@ class RoboState
   };
 
 
+// Change the value of Movement multiple until turtlebot moves forward by incrementAmt.
+// And stops for movementInterval.
+void RoboState::testForward()
+{
+  // may need to adjust value for whatever reason
+  usleep(movementInterval);
+  double xMoveCommand; 
+  // only move forward incrementAmt if the amount left to move is greater than incrementAmt
 
+  // ideally, this should result in forward (or backward movement)
+  // in the x direction by incrementAmt
+  xMoveCommand = incrementAmt*movementMultiple;
+  this->velocityCommand.linear.x = incrementAmt*movementMultiple;
+  this->velocityCommand.angular.z = 0.0;
+	  
+  velocityPublisher.publish(this->velocityCommand);
+  // ideally, this is the amount that x has changed
+  // we should wait until forward movement has finished before we go on
+  usleep(movementInterval);
+
+  ROS_INFO("We moved %f", incrementAmt);
+  
+
+}
 
   // this is called whenever we receive a message 
 void RoboState::messageCallback(const sample_pubsub::mymsg::ConstPtr& msg)
@@ -345,19 +369,19 @@ int main(int argc, char **argv)
   geometry_msgs::Twist cmd_vel;
   ros::Rate loopRate(1); // 10 hz
 
-  while(ros::ok())
-    {
+  //  while(ros::ok())
+  // {
       // turnThenForward go is invoked when we want TurtleBot to turn in direction of destination
       // then go forward
-      robot.turnThenForwardGo();
-
+      //robot.turnThenForwardGo();
+      robot.testForward();
       // goRobotGo is invoked when we want to move forward, xCoord amount, then
       // rotate towards destination and then move forward
       //  robot.goRobotGo();
 	    
       ros::spinOnce();
       loopRate.sleep();
-    }
+      //    }
   return 0;
 }
 
