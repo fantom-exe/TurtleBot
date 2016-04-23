@@ -23,7 +23,7 @@ int main(int argc, char **argv)
   int count = 0;
   while (ros::ok())
   {
-    
+
     sample_pubsub::mymsg msg;
     //    std::stringstream ss;
     x = 0;

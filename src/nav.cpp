@@ -1,6 +1,6 @@
 #ifndef NAV_CPP
 #define NAV_CPP
-
+#include <turtlebot/mymsg.h>
 #include "nav.h"
 #include "ros/ros.h"
 #include <string>
@@ -8,13 +8,13 @@
 #include <math.h>
 #include <cmath>
 // how much we need in velocity commands to move incrementAmt forward
-const double movementMultiple = 1; 
+const double movementMultiple = 1.8; 
 // how much we move forward/backward each increment
 const double incrementAmt = .1;
 // how much angular velocity we need to move right 90 degrees
-const double left_90 = 1.0;
+const double left_90 = 2.55;
 // how much angular velocity we need to move right 90 degrees
-const double right_90 = -1.0;
+const double right_90 = -2.56;
 // this is how long the TurtleBot takes to move incrementAmt distance forward
 const double movementInterval = 500000;
 
@@ -44,7 +44,7 @@ void RoboState::testForward()
 }
 
   // this is called whenever we receive a message 
-void RoboState::messageCallback(const sample_pubsub::mymsg::ConstPtr& msg)
+void RoboState::messageCallback(const turtlebot::mymsg::ConstPtr& msg)
 {
   //ROS_INFO("got packet: [%s]", msg->data.c_str());
   //ROS_INFO("got packet: ");
@@ -55,7 +55,7 @@ void RoboState::messageCallback(const sample_pubsub::mymsg::ConstPtr& msg)
 	setY(msg->y);
 	ROS_INFO("xCoord is: %f. yCoord is: %f", getX(), getY());
 	setMessageStatus(true);
-	//setTurnAndGoForward(true);
+	setTurnAndGoForward(true);
       }
     else
       ROS_INFO("Cannot accept message. Movement still in progress.");
@@ -70,7 +70,7 @@ void RoboState::turnForward()
 {
  
    // gives the angle between y axis and hypotenuse
-    double angleRotation = atan(getX()/getY());
+    double angleRotation = 57.2958*atan(getY()/getX());
     // uses pythagorean theorem to figure out distance 
     double finalX = sqrt(pow(getX(),2) + pow(getY(),2));
 
@@ -81,7 +81,7 @@ void RoboState::turnForward()
     if(angleRotation > 0)
       this->velocityCommand.angular.z = left_90*(angleRotation/90);
     else // negative angle of rotation, so we just rotate angleRotation/90 times the amount we would need to rotate 90 degrees right
-      this->velocityCommand.angular.z = right_90*(-1*angleRotation/90);
+      this->velocityCommand.angular.z = right_90*(angleRotation/90);
     velocityPublisher.publish(this->velocityCommand);
     // x is aligned with the hypotenuse, so we set it equal to the length of the hypotenuse
     setX(finalX);
@@ -142,7 +142,7 @@ void RoboState::turnForward()
   double RoboState::xIsNegative()
   {
 
-    if( getX() > 0)
+    if( getX() >= 0)
       return 1;
     else
       return -1;
@@ -152,7 +152,7 @@ void RoboState::turnForward()
   {
     // may need to adjust value for whatever reason
 
-    usleep(100000);
+    //    usleep(100000);
 
     
     if(getX()!=0)
@@ -162,16 +162,18 @@ void RoboState::turnForward()
 	// only move forward incrementAmt if the amount left to move is greater than incrementAmt
 	if (std::abs(getX()) > incrementAmt){
 	  // ideally, this should result in forward (or backward movement)
+	  usleep(movementInterval);
 	  // in the x direction by incrementAmt
 	  xMoveCommand = incrementAmt*movementMultiple*xIsNegative();
-	  this->velocityCommand.linear.x = incrementAmt*movementMultiple;
+	  this->velocityCommand.linear.x = xMoveCommand;
 	  this->velocityCommand.angular.z = 0.0;
 	  
 	  velocityPublisher.publish(this->velocityCommand);
+	  ROS_INFO("The amount we published was %f", xMoveCommand);
 	  // ideally, this is the amount that x has changed
 	  this->incrementX(-1*xIsNegative()*incrementAmt);
 	  // we should wait until forward movement has finished before we go on
-	  usleep(movementInterval);
+	  usleep(50000);
 
 	  ROS_INFO("We moved %f", incrementAmt);
 	  ROS_INFO("The remaining amount to move is %f", getX());
@@ -195,7 +197,7 @@ void RoboState::turnForward()
       if(getY()==0){
 	// means that both x and y are 0, so we should stop 
 	// does this by setting messageStatus to false
-	ROS_INFO("The both x and y are zero, so we are done with movement.");
+	ROS_INFO("The both x and y are zero, so we are done with movemet.");
 	ROS_INFO("Feel free to send more messages.");
 	setMessageStatus(false);
       }
@@ -241,8 +243,10 @@ void RoboState::turnForward()
     usleep(500000);
     this->velocityCommand.linear.x = 0.0;
     this->velocityCommand.angular.z = left_90;
+    
 	
     velocityPublisher.publish(this->velocityCommand);
+    usleep(100000);
   }
 
   void RoboState::rotateRight()
@@ -252,6 +256,7 @@ void RoboState::turnForward()
     this->velocityCommand.linear.x = 0.0;
     this->velocityCommand.angular.z = right_90;
     velocityPublisher.publish(this->velocityCommand);
+    usleep(100000);
   }
 
 

@@ -25,20 +25,27 @@ int main(int argc, char **argv)
   //ros::Subscriber sub = nh.subscribe("my_msg", 1000, messageCallback);
   geometry_msgs::Twist cmd_vel;
   ros::Rate loopRate(1); // 10 hz
-
-  //  while(ros::ok())
-  //    {
+  int count = 0; 
+    while(ros::ok())
+      {
+	
       // turnThenForward go is invoked when we want TurtleBot to turn in direction of destination
       // then go forward
-      //robot.turnThenForwardGo();
-      robot.testForward();
+      robot.turnThenForwardGo();
+      /*
+	if(count < 3)
+	  robot.testForward();
+
+      */
       // goRobotGo is invoked when we want to move forward, xCoord amount, then
       // rotate towards destination and then move forward
-      //  robot.goRobotGo();
-	    
-      ros::spinOnce();
-      loopRate.sleep();
-      //    }
+	//	if(count==0)
+	//	  robot.rotateRight();
+	count++;
+	//robot.goRobotGo();
+	ros::spinOnce();
+	loopRate.sleep();
+      }
   return 0;
 }
 

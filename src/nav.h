@@ -2,7 +2,7 @@
 #define NAV_H
 // ROS includes.
 #include "ros/ros.h"
-#include <sample_pubsub/mymsg.h>
+#include <turtlebot/mymsg.h>
 #include <iostream>
 //#include "node_example/listener.h"
 #include "geometry_msgs/Twist.h"
@@ -53,13 +53,14 @@ class RoboState
     bool getTurnAndGoForward();
     void setTurnAndGoForward(bool value);
     bool turnAndGoForward;
-    void rotateLeft();
-    void rotateRight();
     void bumperCallback(const create_node::TurtlebotSensorState::ConstPtr& msg);
-    void messageCallback(const sample_pubsub::mymsg::ConstPtr& msg);
+    void messageCallback(const turtlebot::mymsg::ConstPtr& msg);
     void turnForward();
     void  goForward();
   public:
+    void rotateLeft();
+     void rotateRight();
+    
     void testForward();
     void turnThenForwardGo();
     RoboState(ros::NodeHandle rosNode);
