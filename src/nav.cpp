@@ -18,6 +18,8 @@ const double right_90 = -2.56;
 // this is how long the TurtleBot takes to move incrementAmt distance forward
 const double movementInterval = 500000;
 
+
+
 // Change the value of Movement multiple until turtlebot moves forward by incrementAmt.
 // And stops for movementInterval.
 void RoboState::testForward()
@@ -68,20 +70,46 @@ void RoboState::messageCallback(const turtlebot::mymsg::ConstPtr& msg)
 
 void RoboState::turnForward()
 {
+
+
+  double angleRotation = 0;
+    double radianConvert = 57.288;
+    if (getX()>0 && getY()==0){
+         angleRotation=0;
+    }
+    else if(getX()<0 && getY()==0){
+        angleRotation=180;
+    }
+    else if(getX()==0 && getY()>0){
+        angleRotation=90;
+    }
+    else if(getX()==0 && getY()<0){
+        angleRotation=-90;
+    }
+    else if(getX()<0 && getY()>0){
+      angleRotation=(180+(atan(getY()/getX())*radianConvert));
+    }
+    else if(getX()<0 && getY()<0){
+      angleRotation=(-180+(atan(getY()/getX())*radianConvert));
+    }
+    else{
+      angleRotation=(atan(getY()/getX())*radianConvert);
+    }
+
  
    // gives the angle between y axis and hypotenuse
-    double angleRotation = 57.2958*atan(getY()/getX());
+
     // uses pythagorean theorem to figure out distance 
     double finalX = sqrt(pow(getX(),2) + pow(getY(),2));
 
     ROS_INFO("The angle of rotation is %f", angleRotation);
-
+    
     this->velocityCommand.linear.x = 0.0;
     // positive angle of rotation, so we just rotate angleRotation/90 times the amount we would need to rotate 90 degrees left
     if(angleRotation > 0)
       this->velocityCommand.angular.z = left_90*(angleRotation/90);
     else // negative angle of rotation, so we just rotate angleRotation/90 times the amount we would need to rotate 90 degrees right
-      this->velocityCommand.angular.z = right_90*(angleRotation/90);
+      this->velocityCommand.angular.z = -1*right_90*(angleRotation/90);
     velocityPublisher.publish(this->velocityCommand);
     // x is aligned with the hypotenuse, so we set it equal to the length of the hypotenuse
     setX(finalX);

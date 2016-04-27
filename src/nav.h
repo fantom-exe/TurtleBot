@@ -57,10 +57,9 @@ class RoboState
     void messageCallback(const turtlebot::mymsg::ConstPtr& msg);
     void turnForward();
     void  goForward();
-  public:
     void rotateLeft();
-     void rotateRight();
-    
+    void rotateRight();
+  public:
     void testForward();
     void turnThenForwardGo();
     RoboState(ros::NodeHandle rosNode);
