@@ -12,7 +12,7 @@ const double movementMultiple = 1.8;
 // how much we move forward/backward each increment
 const double incrementAmt = .1;
 // how much angular velocity we need to move right 90 degrees
-const double left_90 = 2.55;
+const double left_90 = 2.54629;
 // how much angular velocity we need to move right 90 degrees
 const double right_90 = -2.56;
 // this is how long the TurtleBot takes to move incrementAmt distance forward
@@ -103,7 +103,8 @@ void RoboState::turnForward()
     double finalX = sqrt(pow(getX(),2) + pow(getY(),2));
 
     ROS_INFO("The angle of rotation is %f", angleRotation);
-    
+    if(angleRotation <= 90 || angleRotation >= -90)
+      {
     this->velocityCommand.linear.x = 0.0;
     // positive angle of rotation, so we just rotate angleRotation/90 times the amount we would need to rotate 90 degrees left
     if(angleRotation > 0)
@@ -111,6 +112,22 @@ void RoboState::turnForward()
     else // negative angle of rotation, so we just rotate angleRotation/90 times the amount we would need to rotate 90 degrees right
       this->velocityCommand.angular.z = -1*right_90*(angleRotation/90);
     velocityPublisher.publish(this->velocityCommand);
+      }
+    else
+      {
+	rotateLeft();
+	rotateLeft();
+	angleRotation = atan(getY()/getX());
+	    this->velocityCommand.linear.x = 0.0;
+    // positive angle of rotation, so we just rotate angleRotation/90 times the amount we would need to rotate 90 degrees left
+    if(angleRotation > 0)
+      this->velocityCommand.angular.z = left_90*(angleRotation/90);
+    else // negative angle of rotation, so we just rotate angleRotation/90 times the amount we would need to rotate 90 degrees right
+      this->velocityCommand.angular.z = -1*right_90*(angleRotation/90);
+    velocityPublisher.publish(this->velocityCommand);
+      }
+
+
     // x is aligned with the hypotenuse, so we set it equal to the length of the hypotenuse
     setX(finalX);
     setY(0);
@@ -119,7 +136,7 @@ void RoboState::turnForward()
     setTurnAndGoForward(false);
     
     
-  }
+}
   
   void RoboState::bumperCallback(const create_node::TurtlebotSensorState::ConstPtr& msg)
   {
