@@ -31,7 +31,8 @@ int main(int argc, char **argv)
 	
       // turnThenForward go is invoked when we want TurtleBot to turn in direction of destination
       // then go forward
-      robot.turnThenForwardGo();
+	robot.testForward();
+	//	robot.turnThenForwardGo();
       /*
 	if(count < 3)
 	  robot.testForward();

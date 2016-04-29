@@ -18,6 +18,8 @@ const double right_90 = -2.56;
 // this is how long the TurtleBot takes to move incrementAmt distance forward
 const double movementInterval = 500000;
 
+const double left_180 = 5;
+
 
 
 // Change the value of Movement multiple until turtlebot moves forward by incrementAmt.
@@ -31,16 +33,16 @@ void RoboState::testForward()
 
   // ideally, this should result in forward (or backward movement)
   // in the x direction by incrementAmt
-  xMoveCommand = incrementAmt*movementMultiple;
-  this->velocityCommand.linear.x = incrementAmt*movementMultiple;
-  this->velocityCommand.angular.z = 0.0;
+
+  this->velocityCommand.linear.x = 0;
+  this->velocityCommand.angular.z = left_180
 	  
   velocityPublisher.publish(this->velocityCommand);
   // ideally, this is the amount that x has changed
   // we should wait until forward movement has finished before we go on
   usleep(movementInterval);
 
-  ROS_INFO("We moved %f", incrementAmt);
+
   
 
 }
