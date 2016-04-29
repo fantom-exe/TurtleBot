@@ -116,6 +116,7 @@ void RoboState::turnForward()
     else
       {
 	rotateLeft();
+	usleep(500000);
 	rotateLeft();
 	angleRotation = atan(getY()/getX());
 	    this->velocityCommand.linear.x = 0.0;
